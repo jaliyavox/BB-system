@@ -67,6 +67,28 @@ const kycRoutes = require('./routes/kycRoutes');
 const ticketRoutes = require('./routes/ticketRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 
+// Root endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Boarding Book API Server',
+    version: '1.0.0',
+    endpoints: {
+      health: '/api/health',
+      auth: '/api/auth',
+      roommates: '/api/roommates',
+      owner: '/api/owner',
+      chats: '/api/chats',
+      notifications: '/api/notifications',
+      payments: '/api/payments',
+      admin: '/api/admin',
+      kyc: '/api/kyc',
+      tickets: '/api/tickets',
+      reviews: '/api/reviews',
+    },
+  });
+});
+
 // Use routes
 app.use('/api/auth', authRoutes);
 app.use('/api/roommates', roommateRoutes);
