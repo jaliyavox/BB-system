@@ -19,8 +19,12 @@ exports.generateReceiptPdf = async (receipt, payment) => {
   try {
     // The file should be in /uploads/receipts/ at project root
     const receiptDir = path.join(__dirname, '..', '..', '..', 'uploads', 'receipts');
-    if (!fs.existsSync(receiptDir)) {
-      fs.mkdirSync(receiptDir, { recursive: true });
+    try {
+      if (!fs.existsSync(receiptDir)) {
+        fs.mkdirSync(receiptDir, { recursive: true });
+      }
+    } catch (dirErr) {
+      console.warn('⚠️ Could not create receipts directory (Vercel serverless limitation):', dirErr.message);
     }
 
     const fileName = `${receipt.receiptNumber}.pdf`;

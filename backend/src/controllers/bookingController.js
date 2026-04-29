@@ -360,9 +360,10 @@ exports.respondToAgreement = async (req, res) => {
     let pdfUrl = null;
     if (status === 'accepted') {
       // Generate PDF
-      const pdfDir = path.join(__dirname, '../../public/agreements');
-      if (!fs.existsSync(pdfDir)) fs.mkdirSync(pdfDir, { recursive: true });
-      const pdfPath = path.join(pdfDir, `agreement_${agreement._id}.pdf`);
+      try {
+        const pdfDir = path.join(__dirname, '../../public/agreements');
+        if (!fs.existsSync(pdfDir)) fs.mkdirSync(pdfDir, { recursive: true });
+        const pdfPath = path.join(pdfDir, `agreement_${agreement._id}.pdf`);
       const doc = new PDFDocument();
       doc.pipe(fs.createWriteStream(pdfPath));
       doc.fontSize(20).text('Boarding House Rental Agreement', { align: 'center' });
@@ -384,6 +385,10 @@ exports.respondToAgreement = async (req, res) => {
       }
       doc.end();
       pdfUrl = `/agreements/agreement_${agreement._id}.pdf`;
+      } catch (pdfErr) {
+        console.warn('⚠️ Could not generate PDF (Vercel serverless limitation):', pdfErr.message);
+        pdfUrl = null;
+      }
     }
 
     const hydrated = await BookingAgreement.findById(agreement._id)

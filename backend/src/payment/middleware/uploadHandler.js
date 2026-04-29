@@ -11,8 +11,14 @@ const fs = require('fs');
 
 // Ensure uploads directory exists
 const uploadsDir = path.join(__dirname, '../../..', 'uploads', 'payments');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+try {
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+    console.log('✓ Created uploads directory:', uploadsDir);
+  }
+} catch (err) {
+  console.warn('⚠️ Could not create uploads directory (Vercel serverless limitation):', err.message);
+  console.warn('   File uploads will not work on serverless. Consider using cloud storage (S3, Cloudinary, etc.)');
 }
 
 // Configure storage
