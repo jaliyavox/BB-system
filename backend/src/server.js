@@ -12,15 +12,25 @@ let keepAliveInterval; // ✅ track it so we can clear on shutdown
 
 async function startServer() {
   try {
-    await connectDatabase();
-    console.log('✓ Database connected successfully');
+    try {
+      await connectDatabase();
+      console.log('✓ Database connected successfully');
+    } catch (dbErr) {
+      console.warn('⚠️ Database connection failed (will retry on requests):', dbErr.message);
+      // Don't crash - continue without database initially
+      if (env.nodeEnv !== 'production') {
+        throw dbErr; // In dev, crash immediately
+      }
+    }
 
     // ====================== KEEP ATLAS ALIVE ======================
     // Pings Atlas every 5 min so M0 free tier never goes cold
     keepAliveInterval = setInterval(async () => {
       try {
-        await mongoose.connection.db.admin().ping();
-        console.log('✓ Atlas keep-alive ping sent');
+        if (mongoose.connection.readyState === 1) {
+          await mongoose.connection.db.admin().ping();
+          console.log('✓ Atlas keep-alive ping sent');
+        }
       } catch (err) {
         console.warn('⚠️ Keep-alive ping failed:', err.message);
       }
