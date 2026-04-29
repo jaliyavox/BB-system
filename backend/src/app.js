@@ -73,6 +73,7 @@ app.get('/', (req, res) => {
     success: true,
     message: 'Boarding Book API Server',
     version: '1.0.0',
+    environment: env.nodeEnv,
     endpoints: {
       health: '/api/health',
       auth: '/api/auth',
@@ -86,6 +87,18 @@ app.get('/', (req, res) => {
       tickets: '/api/tickets',
       reviews: '/api/reviews',
     },
+  });
+});
+
+// Debug endpoint - check environment configuration
+app.get('/api/debug/config', (req, res) => {
+  res.status(200).json({
+    nodeEnv: env.nodeEnv,
+    port: env.port,
+    mongoUri: env.mongoUri ? env.mongoUri.substring(0, 50) + '...' : 'NOT SET',
+    jwtSecret: env.jwtSecret ? 'SET' : 'NOT SET',
+    allowedOrigins: env.allowedOrigins,
+    frontendUrl: env.frontendUrl,
   });
 });
 
