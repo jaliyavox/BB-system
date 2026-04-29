@@ -1,0 +1,10 @@
+CHANGES NEEDED FOR PROFILE SETUP:
+
+1. In handleSubmit function, after profile is saved (around line 909):
+   - Change: navigate('/find')
+   - To: navigate(`/signin${emailParam ? `?email=${encodeURIComponent(emailParam)}` : ''}`)
+   - And clear tokens: localStorage.removeItem('bb_access_token'), localStorage.removeItem('bb_current_user')
+
+2. SignInPage needs to be updated to not redirect to profile-setup if profileCompleted is true
+
+3. VerifyEmailPage already updated to redirect to /profile-setup instead of /email-confirmed
