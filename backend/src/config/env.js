@@ -39,6 +39,6 @@ const env = {
   emailFromAddress: process.env.EMAIL_FROM_ADDRESS || process.env.EMAIL_USER || '',
 };
 
-console.log('[ENV] mongoUri loaded:', mongoUri ? '✅ Found' : '❌ Missing');
+console.log('[ENV] mongoUri loaded:', mongoUri ? 'Found' : 'Missing');
 
 module.exports = env;
