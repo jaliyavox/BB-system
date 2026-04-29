@@ -7,19 +7,25 @@ const Admin = require('../models/Admin');
  */
 exports.login = async (req, res) => {
   try {
+    console.log('🔐 Admin login attempt - body:', req.body);
     const { email, password } = req.body;
 
     if (!email || !password) {
+      console.warn('⚠️ Missing email or password');
       return res.status(400).json({ success: false, message: 'Email and password are required' });
     }
 
+    console.log('🔍 Looking for admin with email:', email);
     const admin = await Admin.findOne({ email }).select('+password');
     if (!admin) {
+      console.warn('⚠️ Admin not found for email:', email);
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
 
+    console.log('✓ Admin found, checking password');
     const isMatch = await admin.comparePassword(password);
     if (!isMatch) {
+      console.warn('⚠️ Password mismatch for admin:', email);
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
 
@@ -32,6 +38,7 @@ exports.login = async (req, res) => {
       { expiresIn: '8h' }
     );
 
+    console.log('✓ Admin login successful:', email);
     res.status(200).json({
       success: true,
       message: 'Login successful',
@@ -45,6 +52,7 @@ exports.login = async (req, res) => {
       },
     });
   } catch (err) {
+    console.error('❌ Admin login error:', err);
     res.status(500).json({ success: false, message: 'Login failed', error: err.message });
   }
 };
