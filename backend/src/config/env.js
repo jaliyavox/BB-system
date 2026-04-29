@@ -4,10 +4,13 @@ const dotenv = require('dotenv');
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-function requireEnv(name) {
+function requireEnv(name, defaultValue = null) {
   const value = process.env[name];
-  if (!value) throw new Error(`Missing required environment variable: ${name}`);
-  return value;
+  if (!value && !defaultValue) {
+    console.error(`⚠️ Missing environment variable: ${name}`);
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value || defaultValue;
 }
 
 function parseAllowedOrigins() {
@@ -27,7 +30,7 @@ const env = {
   nodeEnv:          process.env.NODE_ENV || 'development',
   port:             Number(process.env.PORT || 5000),
   mongoUri,
-  jwtSecret:        requireEnv('JWT_SECRET'),
+  jwtSecret:        process.env.JWT_SECRET || 'default-dev-secret-key-change-in-production',
   jwtExpiresIn:     process.env.JWT_EXPIRES_IN || '7d',
   frontendUrl:      getFrontendUrl(),
   allowedOrigins:   parseAllowedOrigins(),
