@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { BiStar, BiMap, BiGroup, BiHome } from 'react-icons/bi';
 import { ArrowRight } from 'lucide-react';
 
-const API = 'http://localhost:5001/api';
+const API = (import.meta.env.VITE_API_URL || 'http://localhost:5001') + '/api';
 
 interface Listing {
   _id: string;
