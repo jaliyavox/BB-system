@@ -31,12 +31,18 @@ const limiter = rateLimit({
 
 app.use(helmet());
 app.use(compression());
+// Allow any Vercel preview deployment URL for this project
+const VERCEL_PREVIEW_PATTERN = /^https:\/\/[\w-]+-jaliyathegreat-9297s-projects\.vercel\.app$/;
+
 app.use(
   cors({
     origin(origin, callback) {
       console.log('[CORS] Incoming request origin:', origin);
       console.log('[CORS] Allowed origins:', env.allowedOrigins);
-      if (!origin || env.allowedOrigins.includes(origin)) {
+      if (!origin) {
+        return callback(null, true);
+      }
+      if (env.allowedOrigins.includes(origin) || VERCEL_PREVIEW_PATTERN.test(origin)) {
         console.log('[CORS] Origin allowed:', origin);
         return callback(null, true);
       }
