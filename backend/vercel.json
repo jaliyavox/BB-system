@@ -1,4 +1,6 @@
 {
+  "version": 2,
   "buildCommand": "npm install",
-  "startCommand": "npm start"
+  "framework": "express",
+  "public": false
 }
