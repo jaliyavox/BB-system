@@ -1,7 +1,7 @@
 const path = require('path');
 const dotenv = require('dotenv');
 
-// ✅ Change to this
+
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 function requireEnv(name) {
